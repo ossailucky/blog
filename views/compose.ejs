@@ -1,0 +1,30 @@
+<%- include("partials/header") -%>
+    <h1 class="compose-h1">Compose</h1>
+    <form action="/compose" method="post">
+        <div class="form-group">
+        <label for="">Title</label><br>
+        <input name="title" type="text" class="form-control">
+        <label for="">Post</label>
+        <textarea class="form-control" name="postBody" id=""  rows="5"></textarea>
+   
+        </div>
+        <button class="btn btn-primary mt-2" type="submit">Publish</button>
+    </form>
+
+    <style>
+        .compose-h1{
+            margin-left: 100px;
+        }
+        form{
+            margin-left: 100px;
+            width: 70%;
+        }
+        /* input[type=text]{
+            width: 100%;
+        }
+        textarea{
+            width: 100%;
+        } */
+    </style>
+
+<%- include("partials/footer") -%>
