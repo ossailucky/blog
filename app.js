@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { blogPost } from "./blogdata.js";
+import _ from "lodash";
 
 const app = express();
 
@@ -57,13 +57,16 @@ app.post("/compose",(req,res)=>{
 app.get("/posts/:postName",(req,res)=>{
     const topic = req.params.postName;
     const singlePost = posts.find((single)=>{
-        return single.title === topic
+        return _.lowerCase(single.title) === _.lowerCase(topic)
     })
     if(singlePost){
         console.log("match found")
     }else{
         console.log("match not found")
     }
+
+    console.log(singlePost)
+
     const postTitle = singlePost.title
     const postBody = singlePost.body
     console.log(postTitle)

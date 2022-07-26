@@ -1,13 +1,26 @@
 <%- include("partials/header") -%>
-    <h1>Home</h1>
+    <section class="home">
+        <h1>Home</h1>
     <p><%= home %></p>
     <% posts.forEach((post)=>{ %>
         <div>
             <h3><%=post.title %></h3>
-            <p><%=post.body %></p>
+            <p>
+                <%=post.body.substring(0,100) + " ..." %>
+                <a href="/posts/<%=post.title %>">Read More</a>
+            </p>
             <a > </a>
         </div>
    <% }) %>
+    </section>
+    
     
 
 <%- include("partials/footer") -%>
+
+<style>
+    .home{
+        margin-left: 200px;
+        margin-top: 50px;
+    }
+</style>
