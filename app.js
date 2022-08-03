@@ -1,6 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
 import _ from "lodash";
+import Post from "./models/model.js";
+
+
 
 const app = express();
 
@@ -27,7 +30,22 @@ app.use(express.static("public"))
 
 app.get("/",(req,res)=>{
 
-    res.render("blog", {posts:posts,home:homeContentString})
+    Post.find({},(err, result)=>{
+        if(result.length === 0){
+            Post.insertMany(posts,(err)=>{
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log("Documents inserted successfully");
+                }
+            });
+            res.redirect("/");
+        }else{
+            res.render("blog", {posts:result,home:homeContentString})
+        }
+    })
+
+    
 })
 
 app.get("/about",(req,res)=>{
@@ -44,33 +62,41 @@ app.get("/compose",(req,res)=>{
 
 app.post("/compose",(req,res)=>{
     const postTitle = req.body.title;
-    const postBody = req.body.postBody
-    const blog = {
+    const postBody = req.body.postBody;
+    const Newpost = new Post({
         title: postTitle,
         body: postBody
-    }
-
-    posts.push(blog);
+    });
+    Newpost.save();
     res.redirect("/")
 })
 
-app.get("/posts/:postName",(req,res)=>{
-    const topic = req.params.postName;
-    const singlePost = posts.find((single)=>{
-        return _.lowerCase(single.title) === _.lowerCase(topic)
+app.get("/posts/:postId",(req,res)=>{
+    const id = req.params.postId;
+
+    Post.findOne({_id: id}, (err, foundBlog)=>{
+        if(err){
+            console.log(err)
+        }else{
+            res.render("post",{ postTitle:foundBlog.title,postBody:foundBlog.body})
+        }
     })
-    if(singlePost){
-        console.log("match found")
-    }else{
-        console.log("match not found")
-    }
 
-    console.log(singlePost)
+    // const singlePost = posts.find((single)=>{
+    //     return _.lowerCase(single.title) === _.lowerCase(topic)
+    // })
+    // if(singlePost){
+    //     console.log("match found")
+    // }else{
+    //     console.log("match not found")
+    // }
 
-    const postTitle = singlePost.title
-    const postBody = singlePost.body
-    console.log(postTitle)
-     res.render("post",{ postTitle:postTitle,postBody:postBody})
+    
+
+    // const postTitle = singlePost.title
+    // const postBody = singlePost.body
+    // console.log(postTitle)
+     
 })
 app.listen(3000,()=>{
     console.log("Server started running on port 3000")
